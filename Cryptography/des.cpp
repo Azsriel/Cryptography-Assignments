@@ -183,31 +183,10 @@ std::string bitArrToHex(std::vector<int> v) {
             temp *= 2;
             temp += v[j];
         }
-        switch(temp) {
-            case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9:
-                output += (char)(temp + '0');
-                break;
-            case 10:
-                output += 'A';
-                break;
-            case 11:
-                output += 'B';
-                break;
-            case 12:
-                output += 'C';
-                break;
-            case 13:
-                output += 'D';
-                break;
-            case 14:
-                output += 'E';
-                break;
-            case 15:
-                output += 'F';
-                break;
-            default:
-                output += '?';
-                break;
+        if (temp < 10) {
+            output += (char)(temp + '0');
+        } else {
+            output += (char)(temp - 10 + 'A');
         }
     }
     return output;
@@ -400,6 +379,8 @@ int main() {
     if (bitArrToHex(cyperArr) == "85E813540F0AB405") {
         std::cout << "Cypher Verified\n";
     }
+
+
 
     return 0;
 }
