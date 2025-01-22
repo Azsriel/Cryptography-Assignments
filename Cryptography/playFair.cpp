@@ -5,7 +5,6 @@ struct coord {
     int j;
 };
 
-
 char FILLER;
 char REPLACE;
 bool isREPLACEI = true;
@@ -104,13 +103,6 @@ void constructMatrix() {
 }
 
 std::string convertToDiagram(std::string os) {
-    // if (contains(os, 'i') && contains(os, 'j')) {
-    //     for (int i = 0; i<os.length(); ++i) {
-    //         if (os.at(i) == 'j') {
-    //             os.at(i) = IJEDGE;
-    //         }
-    //     }
-    // }
     std::string ns = "";
     for (int i = 0; i<os.length(); ++i) {
         if (i == os.length()-1) {
@@ -175,14 +167,11 @@ std::string encrypt(std::string input) {
 }
 
 std::string PlayFairCypherEncrypt(std::string input) {
-    
     fillChars(input);
     constructMatrix();
     input = removeWhitespace(input);
     input = convertToDiagram(input);
-    //std::cout << input << "::::\n";
     std::string e = encrypt(input);
-
     return e;
 }
 
@@ -232,14 +221,14 @@ int main() {
     fillAlphabets();
 
     std::string input = getInput();
-
     std::string encryptedText = PlayFairCypherEncrypt(input);
+    std::string decryptedText = decrypt(encryptedText);
     
-    std::cout << "Filler: " << FILLER << "\n";
+    std::cout << "Filler Character: " << FILLER << "\nMatrix:\n";
     printMatrix();
-    std::cout << encryptedText << "\n";
 
-    std::cout << "Decrypted Text: \n" << decrypt(encryptedText) << "\n";
+    std::cout << "Encrypted Text: " << encryptedText << "\n";
+    std::cout << "Decrypted Text: " << decryptedText << "\n";
 
     return 0;
 }

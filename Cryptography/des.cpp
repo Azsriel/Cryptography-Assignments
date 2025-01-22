@@ -323,64 +323,43 @@ std::vector<int> desRound(std::vector<int> input, std::vector<int> key) {
 }
 
 int main() {
-    std::string input = "0123456789ABCDEF";
+    std::string input; 
+    std::cout << "Enter the plaintext: ";
+    std::getline(std::cin, input);
+
+    if (input.length() != 16) {
+        std::cout << "Not 16 length input\n";
+        return 0;
+    }
 
     auto v = hexToBitArr(input);
 
     auto v2 = permutation(v, initial_perm, 64);
 
-    std::string keyInput = "133457799BBCDFF1";
+    std::string keyInput;
+    std::cout << "Enter the key: ";
+    std::getline(std::cin, keyInput);
+
+    if (keyInput.length() != 16) {
+        std::cout << "Not 16 length key\n";
+        return 0;
+    }
 
     auto keys = keyGen(hexToBitArr(keyInput));
-
-    // std::vector<std::string> K2 = {"000110110000001011101111111111000111000001110010",
-    //                                "011110011010111011011001110110111100100111100101",
-    //                                "010101011111110010001010010000101100111110011001",
-    //                                "011100101010110111010110110110110011010100011101",
-    //                                "011111001110110000000111111010110101001110101000",
-    //                                "011000111010010100111110010100000111101100101111",
-    //                                "111011001000010010110111111101100001100010111100",
-    //                                "111101111000101000111010110000010011101111111011",
-    //                                "111000001101101111101011111011011110011110000001",
-    //                                "101100011111001101000111101110100100011001001111",
-    //                                "001000010101111111010011110111101101001110000110",
-    //                                "011101010111000111110101100101000110011111101001",
-    //                                "100101111100010111010001111110101011101001000001",
-    //                                "010111110100001110110111111100101110011100111010",
-    //                                "101111111001000110001101001111010011111100001010",
-    //                                "110010110011110110001011000011100001011111110101"};
-
-    // for (int i = 0; i<keys.size(); ++i) {
-    //     //std::cout << vecToStr(keys[i]) << "\n";
-    //     if (K2[i] == vecToStr(keys[i])) {
-    //         std::cout << "Key " << i << " Verified\n";
-    //     } else {
-    //         std::cout << "Key " << i << " Wrong\n";
-    //         std::cout << K2[i] << "\n" << vecToStr(keys[i]) << "\n";
-    //     }
-    // }
 
     std::vector<std::vector<int>> roundOp;
     roundOp.push_back(v2);
     
     for (int i = 0; i < 16; ++i) {
         roundOp.push_back(desRound(roundOp[i], keys[i]));
+        std::cout << "Round " << i + 1 << " result: " << bitArrToHex(roundOp[roundOp.size() - 1]) << "\n";
     }
-
-    //std::cout << vecToStr(roundOp[16]) << "\n";
 
     std::vector<int> R, L;
     L = splitInHalf(roundOp[16], R);
     auto f1 = joinHalfs(R, L);
     auto cyperArr = permutation(f1, final_perm, 64);
 
-    std::cout << bitArrToHex(cyperArr) << "\n";
-
-    if (bitArrToHex(cyperArr) == "85E813540F0AB405") {
-        std::cout << "Cypher Verified\n";
-    }
-
-
-
+    std::cout << "Final Ciphertext: " << bitArrToHex(cyperArr) << "\n";
     return 0;
 }

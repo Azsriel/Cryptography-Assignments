@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 int multiplicativeInverse(int n, int base) {
-    for (int i = 0; i < n; ++i) {
+    for (int i = 1; i < n; ++i) {
         if (((n * i) % base) == 1) return i;
     }
     std::cout << "N: " << n << " Base: " << base << "\n";
@@ -209,13 +209,8 @@ std::string encrypt(Matrix key, std::vector<Matrix> data, int n) {
 
 std::string decrypt(Matrix key, std::string cyphertext, int n) {
     std::vector<Matrix> data = generateVectors(cyphertext, n);
-
     Matrix newKey = key.inverse();
-
-    newKey.print();
-
     std::string decryptedText = encrypt(newKey, data, n);
-
     return decryptedText;
 }
 
@@ -225,7 +220,7 @@ void HillCypher(std::string input, std::string key, int n) {
 
     std::string encryptedText = encrypt(k, data, n);
 
-    std::cout << "Data: " << encryptedText << "\n";
+    std::cout << "Encrypted Text: " << encryptedText << "\n";
 
     std::cout << "Plaintext: " << decrypt(k, encryptedText, n) << "\n";
 }

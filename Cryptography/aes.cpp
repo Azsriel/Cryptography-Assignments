@@ -40,28 +40,8 @@ void printMatrix(const unsigned char* charArray) {
         for (int j = 0; j < 4; ++j) {
             std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(charArray[i*4+j]) << " ";
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
     }
-}
-
-std::string matrixToString(const unsigned char charArray[16]) {
-    std::string result = "";
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            result += charArray[i * 4 + j];
-        }
-    }
-    return result;
-}
-
-std::string matrixToHex(unsigned char charArray[16]) {
-    std::string result = "";
-    for (int i = 0; i < 16; ++i) {
-        result +=  (static_cast<int>(charArray[i]) < 16 ? "0" : "") + std::to_string(static_cast<int>(charArray[i]));
-        result += " ";
-    }
-
-    return result;
 }
 
 void gFunction(unsigned char* g, int roundIndex) {
@@ -173,13 +153,15 @@ void Round(unsigned char* input, unsigned char* roundKey) {
     addRoundKey(input, roundKey);
 }
 
-std::string AESEncrypt(unsigned char input[16], unsigned char allKeys[176]) {
+void AESEncrypt(unsigned char input[16], unsigned char allKeys[176]) {
     // Initial Round
     addRoundKey(input, allKeys);
+    std::cout << "Round 1: "; printMatrix(input); std::cout << "\n";
 
     // Rounds 1-9
     for (int i = 1; i <= 9; ++i) {
         Round(input, allKeys + (16 * i));
+        std::cout << "Round " << i << ": "; printMatrix(input);std::cout << "\n";
     }
 
     // Round 10
@@ -187,8 +169,7 @@ std::string AESEncrypt(unsigned char input[16], unsigned char allKeys[176]) {
     shiftRows(input);
     addRoundKey(input, allKeys + 160);
 
-    printMatrix(input);
-    return matrixToHex(input);
+    std::cout << "Round 10 Final: "; printMatrix(input); std::cout << "\n";
 }
 
 int main() {
@@ -220,29 +201,18 @@ int main() {
         keyMatrix[i] = masterKey[i];
     }
 
-    // printMatrix(textMatrix);
-
-    // std::cout << matrixToString(textMatrix) << "\n";
-
-    // unsigned char test[16] = {0x0F, 0x15, 0x71, 0xC9, 0x47, 0xD9, 0xE8, 0x59, 0x0C, 0xB7, 0xAD, 0xD6, 0xAF, 0x7F, 0x67, 0x98};
-
     unsigned char roundKeys[176];
     keyGen(roundKeys, keyMatrix);
 
-    // for (int i = 0; i < 11; ++i) {
-    //     for (int j = i * 16; j < i * 16 + 16; ++j) {
-    //         std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(roundKeys[j]) << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
+    std::cout << "Keys: \n";
+    for (int i = 0; i < 11; ++i) {
+        for (int j = i * 16; j < i * 16 + 16; ++j) {
+            std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(roundKeys[j]) << " ";
+        }
+        std::cout << std::endl;
+    }
 
-    // printMatrix(roundKeys);
-
-    // printMatrix(roundKeys + 16);
-
-    std::string encryptedHex = AESEncrypt(textMatrix, roundKeys);
-
-    //std::cout << "Output: " << encryptedHex << "\n";
+    AESEncrypt(textMatrix, roundKeys);
 
     return 0;
 }
